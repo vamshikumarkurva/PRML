@@ -1,0 +1,62 @@
+\documentclass[12pt,a4paper]{article}
+\title{Pattern Recognition Machine Learning}
+\author{vamshi, SC15M045}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{flafter}
+\usepackage{geometry}
+\usepackage{lmodern}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\begin{document}
+		\pagenumbering{gobble}
+		\maketitle
+		\newpage
+		\section{}
+		distance metric $ d(x,y) = (x-y)^2, x,y \in \mathbb{R} $ \newline
+		1. $ d(x,y) = d(y,x) \implies symmetric $ \newline
+		2. $ d(x,y) >= 0 $ and $ d(x,y)=0 \iff x=y $ \newline
+		3. $ d(x,y) = (x-y)^2  = x^2+y^2-2xy \newline
+		   \hspace*{9ex} > (x-0)^2 + (y-0)^2 \newline
+		   \hspace*{9ex} >  d(x,0) + d(0,y)$, if x and y are of oppsite signs \newline
+		   Triangle inequality not satisfied $ \implies d(x,y) = (x-y)^2 $ is not a metric on real line.
+		   
+		\section{}
+		$x_0$ is an accumulation point of $ A \subset (X,d)$.i.e. every neighbourhood of $x_0$ contains atleast one point of A distinct from $x_0$. Let $B(x_0,r) = \{x \in X: d(x,x_0) < r\}$ be the open ball centered around $x_0$ of radius r, i.e $\forall r \in \mathbb{R}, \exists$ atleast one $y \in A $ such that $ y \in B(x_0,r) $ and $x_0 \neq y$ \newline
+		$\therefore$ Neighborhood of $x_0$ contains infinitely many points of A.  
+		
+		\section{} 
+		$x = (x_1, x_2,....x_n), y=(y_1, y_2,...y_n), d(x,y) = max_i \hspace*{1ex}|y_i-x_i|$\newline
+		Let $\{x^{(n)}\} $be the cauchy sequence in $\mathbb{R}^n$.$ \forall \epsilon > 0, \exists N \in \mathbb{N}$ such that $d(x^{(m)},x^{(n)}) < \epsilon $ for $ m, n > N$.\newline
+		$d(x^{(m)},x^{(n)}) = max_i \hspace*{1ex} |{x_i}^{(n)}-{x_i}^{(m)}| < \epsilon \implies \forall i$ and $m,n > N, |{x_i}^{(n)}-{x_i}^{(m)}| < \epsilon$.i.e, Every $i^{th}$ component of sequence $\{x^{(n)}\}$ forms a cauchy sequence of real numbers. Since cauchy sequences are bounded every sequence of the real numbers has a monotone subsequence. By the Monotone Convergence Theorem, we have that the subsequence converges. Since the subsequence converges, cauchy sequence also converges. Hence $(X,d)$ is complete.
+		
+		\section{}
+		Let $y=m_1x$ and $y=m_2x$ be the straight lines passing through the origin. Union of points on these two lines $ V = \{(x,y); y = m_1x$ or  $y = m_2x\}$. Let $ X_1=(x_1,y_1), X_2=(x_2,y_2) \in V$ such that $y_1 = m_1x_1 ,y_2=m_2x_2  \therefore X_3 = X_1+X_2 = (x_1+x_2, y_1+y_2)= (x_1+x_2, m_1x_1+m_2x_2) \notin V$.i.e, $X_3$ lies neither on $y=m_1x$ nor on $y=m_2x$. Hence V is not a subspace of $\mathbb{R}^2$
+		
+		\section{}
+		$M=\{v_1=(1,1,1),v_2=(0,0,2)\}$ containstwo linearly independent vectors in $\mathbb{R}^3$. Dimension of vector space formed by span of M is 2.\newline
+		span of M = $\{\alpha_1v_1+\alpha_2v_2; \alpha_1, \alpha_2 \in \mathbb{R}\}$
+		
+		\section{}
+		$(X_1, \|.\|_1), (X_2, \|.\|_2)$ are normed spaces.Product space $ X = X_1$x$X_2$.i.e, any element in X can be written as $x= (x_1,x_2), x_1 \in X_1, x_2 \in X_2$ \newline
+		$\|x\| = \max(\|x_1\|_1,\|x_2\|_2)$. clearly \newline
+		1. $\|x\| >= 0 $ and $ \|x\| = 0 \iff x_1=0$ and $x_2=0.i.e, x=0$ \newline
+		2. $\|\alpha x\| = \max(\|\alpha x_1\|_1,\|\alpha x_2\|_2) = |\alpha|*\max(\|x_1\|_1,\|x_2\|_2) = |\alpha|\|x\|$\newline
+		3. Let $x= (x_1,x_2), y= (y_1,y_2) , z=x+y= (x_1+y_1,x_2+y_2)$ \newline
+		\hspace*{3ex}$\|z\|= \|x+y\| = \max(\|x_1+y_1\|_1,\|x_2+y_2\|_2)$ \newline
+		\hspace*{7ex}$< \max(\|x_1\|_1,\|x_2\|_2) + \max(\|y_1\|_1,\|y_2\|_2)$ \newline
+		\hspace*{7ex}$< \|x\| + \|y\| $ \newline
+		Hence X is a normed space.
+		
+		\section{}
+		$X = \mathbb{C}^{2x2}$ vector space of complex 2x2 matrices and $T:X\rightarrow X$ and $T(x) = bx$, b is fixed, $ b \in X$\newline
+		1. $T(\alpha x) = b(\alpha x) = \alpha bx = \alpha T(x)$ \newline
+		2. $T(x+y) = b(x+y) = bx+by = T(x)+T(y) $ \newline
+		Hence T is linear
+		
+		\section{}
+		$\langle x,u \rangle> = \langle x,v \rangle, \forall x \implies \langle x, u-v \rangle = 0, \forall x \implies u-v = 0 \implies u=v $
+		
+\end{document}
