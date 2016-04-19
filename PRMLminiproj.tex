@@ -1,0 +1,118 @@
+\documentclass[a4paper, 12pt, notitlepage]{report}
+
+\usepackage{amsfonts} % if you want blackboard bold symbols e.g. for real numbers
+\usepackage{graphicx} % if you want to include jpeg or pdf pictures
+\usepackage{mathtools}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+
+\title{Project Report} % change this
+\title{Image Compression using 2DPCA} % change this} % change this
+\author{Vamshi Kumar Kurva} % change this
+\date{\today} % change this
+
+\begin{document}
+
+%%%%%%%%%% PRELIMINARY MATERIAL %%%%%%%%%%
+\maketitle
+
+\tableofcontents 
+
+%%%%%%%%%% MAIN TEXT STARTS HERE %%%%%%%%%%
+
+%%%%%%%%%% SAMPLE CHAPTER %%%%%%%%%%
+\chapter{}
+%
+The purpose of this document is to provide a brief report on compression of image using 2-Dimensional PCA and the improvement in efficiency and performance compared to the conventional PCA. 
+
+\section{Abstract}
+Two dimensional principal component analysis (2DPCA) is recently proposed technique for face representation and recognition. The standard PCA
+works on 1-dimensional vectors which has inherent problem of dealing with high dimensional vector space data such as images, whereas 2DPCA directly works on
+matrices i.e. in 2DPCA, PCA technique is applied directly on original image without transforming into 1-dimensional vector. This feature of 2DPCA has
+advantage over standard PCA in terms of dealing with high dimensional vector space data. In this paper a working principle is proposed for color image
+compression using 2DPCA. Several other variants of 2DPCA are also applied and the proposed method effectively combines several 2DPCA based techniques.
+Method is tested on several standard test images and found that the quality of reconstructed image is better than standard PCA based image compression. The other performance measures, such as computational time.
+\section{Introduction}
+Dimensionality reduction is one of the key techniques in data analysis, aimed at revealing meaningful structure and unexpected relationship in multivariate data. It assembles numerous methods, all striving to present high-dimensional data in low dimensional space, in a way that faithfully captures desired structural elements of the data.
+
+There are various methods for dimensionality reduction. Principal com-
+ponent analysis (PCA) also known as Karhunen-Loeve expansion, is one of the
+classical dimensionality reduction methods used for feature extraction which has been widely used in variety of areas such as signal processing, pattern recognition, data mining, computer vision and machine learning. The dimensionality reduction problem is directly related to Image compression. PCA has been widely applied in the area of image compression in various forms. The PCA formulation may be used as a digital image compression algorithm with a low level of loss.
+
+%%%%%%%%%% INFORMATION %%%%%%%%%%
+\section{2DPCA and variants}
+%
+Let \textit{X} denotes an n-dimensional unitary column vector called as projection vector. A is $ m \times n $ random image matrix which is transformed into \textit{Y} using \textit{X} by following linear transformation:
+\begin{center}
+	$ Y = AX  $  
+\end{center}
+\textit{Y} is the projected feature vector. \textit{X} should be chosen in such a way that the scatter of the projected samples is maximum. It turns out that the projection vectors are the eigen vectors of image covariance matrix.
+
+Let  $A_K $, (K=1,2,..L) be the images of size \textit{m}x\textit{n}.Then average or mean image \textit{D} is given by
+\begin{center}
+	 $ D = \dfrac{1}{L} \displaystyle\sum_{k=0}^{k=L-1} A_k $ 
+\end{center}
+Image covariance matrix is given by
+\begin{center}
+$ G = \dfrac{1}{L} \displaystyle\sum_{k=0}^{k=L-1} {(A_k-D)}^{T}{(A_k-D)} $ 
+\end{center} 
+Let the projection vectors i.e. eigen vectors of the covariance matrix corresponding to eigen vectors in decreasing order be $ X_1,X_2,....X_n $. Using d eigen vectors, projected feature vectors are
+\begin{center}
+$ Y_k = A_kX_i; k = 1,2,..L, i = 1,2,....d $
+\end{center}
+Thus Projected featute matrix for an image
+\begin{center}
+$ F = {[Y_1, Y_2,...Y_d]}_{m \times d} $
+\end{center}
+Now The size of the feature matrix is $m \times d$.The reconstructed image from its feature matrix can be formed as
+\begin{center}
+$ \bar{A_k} = {[Y_1, Y_2, ...Y_d]}_{m \times d}{{[X_1, X_2,...X_d]}^{T}}_{d \times n} $
+\end{center}
+\subsection{Alternative 2DPCA}
+%
+2DPCA presented above works in the row-direction of image. Similarly it can be applied in the column direction also. Then the image covariance matrix in the column direction is
+\begin{center}
+$ G_c = \dfrac{1}{L} \displaystyle\sum_{k=0}^{k=L-1} {(A_k-D)}{(A_k-D)}^{T} $ 
+\end{center}
+Let the projection vectors i.e. eigen vectors of the covariance matrix corresponding to eigen vectors in decreasing order be $ Z_1,Z_2,....Z_m $. Using q eigen vectors, projected feature vectors are
+\begin{center}
+$ Y_k = {Z_i}^T{A_k},  k = 1,2,..L, i = 1,2,....d $
+\end{center}
+Thus Projected featute matrix for an image
+\begin{center}
+$ F_c = {[Y_1 | Y_2 |... | Y_q]}_{q \times n} $
+\end{center}
+Now The size of the feature matrix is $q \times n$.The reconstructed image from its feature matrix can be formed as
+\begin{center}
+$ \bar{A_k} = {[Z_1, Z_2, ...Z_q]}_{m \times q}{{[Y_1 | Y_2 |...| Y_q]}}_{q \times n} $
+\end{center}
+
+\subsection{2-Dimensional 2DPCA}
+%
+2DPCA and alternative 2DPCA only works in the row and column direction of images respectively. That is, 2DPCA learns an optimal matrix X from a set of 
+training images reflecting information between rows of images, and then projects an $m \times n$ image $A_k$ onto X, yielding an $m \times d$ row feature matrix $F_{rk} = A_k X$. Similarly, the alternative 2DPCA learns optimal matrix Z reflecting information between columns of images,and then projects $A_k$ onto Z , yielding a $q \times n$ matrix column feature matrix $F_{ck} = Z^T A_k $
+%
+\begin{flushleft}
+A way to simultaneously use the projection matrices X and Z is described as   $ F_{rck} = Z^T A_k X $ of size $ q \times d $. The matrix $F_{rck}$ is also called the coefficient or row-column feature matrix in image representation, which can be used to reconstruct the original image $A_k$ , using $A_k = Z F _{rck} X^T $.
+\end{flushleft}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{}
+\section{Results}
+The results obtained by using the 2-Directional 2DPCA method for image compression are found impressive on account of quality of reconstructed image and computation time. For the experiment we used 400 face images of size $102 \times 74$. Using 2-Dimensional 2DPCA, the compuatation time is found to be around 1 second, but by using conventional 1Dimensional PCA, computation time is found to be around 1100 seconds. This large increase in computational time is because of calculating the eigen vectors for the matrix of size $7548 \times 7548$  
+
+%%%%%%%%%% BIBLIOGRAPHY %%%%%%%%%%
+\chapter*{Bibliography}
+%
+\begin{description}
+
+\item Dwivedi; "Color Image Compression Using 2-Dimensional Principal Component Analysis (2DPCA)"; Indian Institute of Technology Kanpur.
+
+\item Jian Yang; Zhang, D.; Frangi, A.F.; Jing-yu Yang
+"Two-dimensional PCA: a new approach to appearance-based face representation and recognition" Pattern Analysis and Machine Intelligence, IEEE Transactions on , Volume: 26, Issue: 1, Jan 2004 Pages:131 – 137.
+
+\item M. Kirby and L. Sirovich, “Application of the Karhunen–Loeve procedure for the characterization of human faces,” IEEE Trans. Pattern Anal. Mach. Intell., vol. 12, no. 1, pp. 103–108, Jan. 1990.
+
+\end{description}
+
+\end{document}

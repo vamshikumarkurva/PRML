@@ -1,0 +1,218 @@
+\documentclass[a4paper, 12pt, notitlepage]{report}
+
+\usepackage{amsfonts} % if you want blackboard bold symbols e.g. for real numbers
+\usepackage{graphicx} % if you want to include jpeg or pdf pictures
+
+\title{Tic-Tac-Toe Using Q-learning} % change this
+\author{Vamshi Kumar Kurva} % change this
+\date{\today} % change this
+
+\begin{document}
+
+%%%%%%%%%% PRELIMINARY MATERIAL %%%%%%%%%%
+\maketitle
+\begin{center}
+Reinforcement Project report % change this
+\\[12pt]
+\end{center}
+\tableofcontents 
+
+%%%%%%%%%% MAIN TEXT STARTS HERE %%%%%%%%%%
+
+%%%%%%%%%% SAMPLE CHAPTER %%%%%%%%%%
+\chapter{}
+%
+The purpose of this document is to provide a report on the implementation of Tic-Tac-Toe using Q-learning and the results obtained. 
+
+\section{Abstarct}
+%
+In this project we will use reinforcement learning to create a program that learns to play the game tic-tac-toe by playing games against itself. We will consider X to be the maximizer and O to be the minimizer. Therefore, a win for X will result in an external reward of +1, while a win for O will result in an external reward of -1. Any other state of the game will result in an external reward of 0 (including tied games).
+We will assume that either player may go first.Specifically, we will be using Q-learning, a temporal difference algorithm, to try to learn the optimal playing strategy. Q-learning creates a table that maps states and actions to expected rewards. The goal of temporal difference learning is to make the
+learner's current prediction for the reward that will be received by taking the action in the current state more closely match the next prediction at the next time step.
+
+\section{Introduction}
+%
+\subsection{Q-Learning}
+One of the most important breakthroughs in reinforcement learning was the development of an off-policy TD control algorithm known as Q-learning.Its simplest form, one-step Q-learning, is defined by
+\begin{center}
+$ Q(S_t,A_t) = Q(S_t,A_t)+\alpha[R_{t+1}+ \gamma \max_{a} Q(S_{t+1},a)-Q(S_t,A_t)] $
+\end{center}
+the learned action-value function, Q, directly approximates $q_∗$ ,the optimal action-value function, independent of the policy being followed.
+This dramatically simplifies the analysis of the algorithm and enabled early convergence proofs. The policy still has an effect in that it determines which state–action pairs are visited and updated. However, all that is required for correct convergence is that all pairs continue to be updated.
+\subsection{Q-Learning Algorithm:}
+Initialize $Q(s,a), \forall s \in S, a \in A(s)$, arbitrarily, and Q(terminal-state, ·) = 0 \\
+Repeat (for each episode):\\
+\hspace*{3ex}Initialize S\\
+\hspace*{3ex}Repeat (for each step of episode):\\
+\hspace*{6ex}Choose A from S using policy derived from Q (e.g., ε-greedy)\\
+\hspace*{6ex}Take action A, observe R,$S^{'}$ \\
+\hspace*{6ex}$ Q(S,A)\leftarrow Q(S,A)+\alpha[R_{t+1}+ \gamma \max_{a} Q(S^{'},a)-Q(S,A)] $\\
+\hspace*{6ex}$S \leftarrow S^{'}$\\
+\hspace*{3ex}Until S is terminal	
+%
+
+%%%%%%%%%% INFORMATION %%%%%%%%%%
+\section{Implementation Details}
+Here we are using Q-learning technique to learn the value of(state, action) pairs by using self-play. Here states are the possible board positions of the two players until the game draws or until either of the players wins. Actions are the positions of the grids where one can possibly make a next move. Possible actions in a given state are the empty grid positions.
+\subparagraph*{}
+To learn values of (state,action) pairs in every possible state we are using Q-learning and self-play. Self-play is used to learn the optimum values of (state,action) values before playing against expert human. Tic-Tac-Toe is an episodic task. i.e. each game starts at a random state but will end after finite number of steps.
+\subparagraph*{} 
+Since it is the episodic task, rewards will be obtained only at the end of the episode. After every move we will check either the game if finished or the board is full. If the player wins the game, we will reward the winner with +1 and the loser with -1. If the game is a draw, we will reward each player 0.5. While self-play each player will have a table of Q(s,a) pairs because for each player (state, action) values will be different. Each player makes a move which is best according to the current Q(s,a) values. And these values will be updated at the end of the reward based on the reward recieved. After some finite number of self-play games we would have explored possible states and actions and the Q(s,a) values will be nearer to the optimal values.
+\subparagraph*{}
+Once the self-play is over, when the human makes a move, we will make a move which is best based on the learned Q(s,a) values. 
+
+%%%%%%%%%% APPENDIX %%%%%%%%%%
+\appendix
+\chapter{}
+%
+This project is implemented in python.
+
+\section*{Code:}
+%
+import random\\
+class TicTacToe:\\
+    \hspace*{4ex} def \_\_init\_\_(self, playerX, playerO):\\
+    \hspace*{8ex} 	self.board = [' ']*9 \\
+    \hspace*{8ex} 	self.playerX, self.playerO = playerX, playerO \\
+    \hspace*{8ex} 	self.playerX\_turn = random.choice([True, False])\\
+\\
+    \hspace*{4ex} def play\_game(self):\\
+    \hspace*{8ex} 	self.playerX.start\_game('X')\\
+    \hspace*{8ex} 	self.playerO.start\_game('O')\\
+    \hspace*{8ex} while True:\\ 
+    \hspace*{12ex} 	if self.playerX\_turn:\\
+    \hspace*{16ex} 		player, char, other\_player = self.playerX, 'X', self.playerO\\
+    \hspace*{12ex} else:\\
+    \hspace*{16ex} 		player, char, other\_player = self.playerO, 'O', self.playerX\\
+    \hspace*{12ex} if player.name == "human":\\
+    \hspace*{16ex} 		self.display\_board()\\
+    \hspace*{12ex} space = player.move(self.board)\\
+    \\
+    \hspace*{12ex} if self.board[space-1] != ' ': \# illegal move \\
+    \hspace*{16ex} 		player.reward(-99, self.board)\\ 
+    \hspace*{16ex} break\\
+    \\
+    \hspace*{12ex} self.board[space-1] = char\\
+    \hspace*{12ex} if self.player\_wins(char):\\
+    \hspace*{16ex} 		player.reward(1, self.board)\\
+    \hspace*{16ex} 		other\_player.reward(-1, self.board)\\
+    \hspace*{16ex} 		break\\
+    \\
+    \hspace*{12ex} if self.board\_full(): \# tie game\\
+    \hspace*{16ex} 		player.reward(0.5, self.board)\\
+    \hspace*{16ex} 		other\_player.reward(0.5, self.board)\\
+    \hspace*{16ex} 		break \\
+    \\
+    \hspace*{12ex} other\_player.reward(0, self.board)\\
+    \hspace*{12ex} self.playerX\_turn = not self.playerX\_turn\\
+    \\
+    \hspace*{4ex} def player\_wins(self, char):\\
+    \hspace*{8ex} for a,b,c in [(0,1,2), (3,4,5), (6,7,8),\\
+    \hspace*{20ex}    (0,3,6), (1,4,7), (2,5,8),\\
+    \hspace*{20ex}    (0,4,8), (2,4,6)]:\\
+    \hspace*{12ex} if char == self.board[a] == self.board[b] == self.board[c]:\\
+    \hspace*{16ex} return True\\
+    \hspace*{8ex} return False\\
+	\\
+    \hspace*{4ex} def board\_full(self):\\
+    \hspace*{8ex} return not any([space == ' ' for space in self.board])\\
+	\\
+    \hspace*{4ex} def display\_board(self):\\
+    \hspace*{8ex} row = " {} | {} | {}" \\
+    \hspace*{8ex} hr = "$\backslash$n-----------$\backslash$n"\\
+    \hspace*{8ex} print (row + hr + row + hr + row).format(*self.board)\\
+\\    
+class Player(object):\\
+    \hspace*{4ex} def \_\_init\_\_(self):\\
+        \hspace*{8ex} self.name = "human" \\
+\\
+    \hspace*{4ex} def start\_game(self, char):\\
+        \hspace*{8ex} print "$\backslash$nNew game!"\\
+\\
+    \hspace*{4ex} def move(self, board):\\
+    \hspace*{8ex}     return int(raw\_input("Your move? "))\\
+\\
+    \hspace*{4ex} def reward(self, value, board):\\
+    \hspace*{8ex}    print "{} rewarded: {}".format(self.name, value)\\
+\\
+    \hspace*{4ex} def available\_moves(self, board):\\
+    \hspace*{8ex}    return [i+1 for i in range(0,9) if board[i] == ' ']\\
+\\    
+class QLearningPlayer(Player):\\
+    \hspace*{4ex} def \_\_init\_\_(self, epsilon=0.2, alpha=0.3, gamma=0.9):\\
+    \hspace*{8ex}    self.name = "Qlearner"\\
+    \hspace*{8ex}    self.harm\_humans = False\\
+    \hspace*{8ex}    self.q = {} \# (state, action) keys: Q values\\
+    \hspace*{8ex}    self.epsilon = epsilon \# e-greedy chance of random exploration\\
+    \hspace*{8ex}    self.alpha = alpha \# learning rate\\
+    \hspace*{8ex}    self.gamma = gamma \# discount factor for future rewards\\
+\\
+    \hspace*{4ex} def start\_game(self, char):\\
+    \hspace*{8ex}    self.last\_board = (' ',)*9\\
+    \hspace*{8ex}    self.last\_move = None\\
+\\
+    \hspace*{4ex} def getQ(self, state, action):\\
+    \hspace*{8ex}    \# To encourage exploration; "optimistic" 1.0 initial values\\
+    \hspace*{8ex}    if self.q.get((state, action)) is None:\\
+    \hspace*{12ex}        self.q[(state, action)] = 1.0\\
+    \hspace*{8ex}    return self.q.get((state, action))\\
+\\
+    \hspace*{4ex} def move(self, board):\\
+    \hspace*{8ex}    self.last\_board = tuple(board)\\
+    \hspace*{8ex}    actions = self.available\_moves(board)\\
+\\
+    \hspace*{8ex}    if random.random() < self.epsilon: \# explore\\
+    \hspace*{12ex}        self.last\_move = random.choice(actions)\\
+    \hspace*{12ex}        return self.last\_move\\
+\\
+    \hspace*{8ex}    qs = [self.getQ(self.last\_board, a) for a in actions]\\
+    \hspace*{8ex}    maxQ = max(qs)\\
+\\
+   \hspace*{8ex}     if qs.count(maxQ) > 1:\\
+   \hspace*{12ex}         \# more than 1 best option; choose among them randomly\\
+   \hspace*{12ex}         best\_options = [i for i in range(len(actions)) if qs[i] == maxQ]\\
+   \hspace*{12ex}         i = random.choice(best\_options)\\
+   \hspace*{8ex}     else:\\
+   \hspace*{12ex}         i = qs.index(maxQ)\\
+\\
+   \hspace*{8ex}     self.last\_move = actions[i]\\
+   \hspace*{8ex}     return actions[i]\\
+\\
+   \hspace*{4ex} def reward(self, value, board):\\
+   \hspace*{8ex}     if self.last\_move:\\
+   \hspace*{12ex}         self.learn(self.last\_board, self.last\_move, value, tuple(board))\\
+\\
+  \hspace*{4ex}  def learn(self, state, action, reward, result\_state):\\
+  \hspace*{8ex}      prev = self.getQ(state, action)\\
+  \hspace*{8ex}      maxqnew = max([self.getQ(result\_state, a) for a in self.available\_moves(state)])\\
+  \hspace*{8ex}      self.q[(state, action)] = prev + self.alpha * ((reward + self.gamma*maxqnew)\\ \hspace*{50ex} - prev)\\
+\\
+if \_\_name\_\_=='\_\_main\_\_':\\
+  \hspace*{4ex}  p1 = QLearningPlayer()\\
+  \hspace*{4ex}  p2 = QLearningPlayer()\\
+\\
+  \hspace*{4ex}  for i in range(0,20000):\\
+  \hspace*{8ex}      t = TicTacToe(p1, p2)\\
+  \hspace*{8ex}      t.play\_game()\\
+\\
+  \hspace*{4ex}  p1 = Player()\\
+  \hspace*{4ex}  p2.epsilon = 0\\
+  \hspace*{4ex}  while True:\\
+  \hspace*{8ex}      t = TicTacToe(p1, p2)\\
+  \hspace*{8ex}      t.play\_game()\\
+
+
+
+
+    
+
+%%%%%%%%%% BIBLIOGRAPHY %%%%%%%%%%
+\chapter*{Bibliography}
+%
+\begin{description}
+
+\item Richard S. Sutton and Andrew G. Barto,2012. \emph{Reinforcement Learning:An Introduction}, Publisher; The MIT Press,Cambridge, Massachusetts
+
+\end{description}
+
+\end{document}
